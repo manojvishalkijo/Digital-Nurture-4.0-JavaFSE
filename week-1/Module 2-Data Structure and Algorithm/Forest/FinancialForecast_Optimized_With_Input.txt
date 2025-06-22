@@ -1,0 +1,61 @@
+Financial Forecasting using Recursion and Memoization
+
+This Java program calculates the future value of an investment using a recursive method based on annual growth rate and years.
+It demonstrates two approaches:
+1. A simple recursive solution.
+2. An optimized recursive solution using memoization to avoid repeated calculations.
+
+Formula used:
+Future Value (FV) = Present Value (PV) * (1 + growth rate)^n
+
+The user is prompted to input:
+- Present Value (initial investment)
+- Annual growth rate (as decimal, e.g., 0.1 for 10%)
+- Number of years
+
+The program outputs both recursive and memoized results for comparison.
+
+package com.kla;
+
+import java.util.Scanner;
+import java.util.HashMap;
+
+public class FinFal {
+
+    // Recursive method to calculate future value
+    public static double futureValue(double presentValue, double growthRate, int years) {
+        if (years == 0) return presentValue;
+        return futureValue(presentValue, growthRate, years - 1) * (1 + growthRate);
+    }
+
+    // Optimized method using memoization
+    static HashMap<Integer, Double> memo = new HashMap<>();
+    public static double futureValueMemo(double presentValue, double growthRate, int years) {
+        if (years == 0) return presentValue;
+        if (memo.containsKey(years)) return memo.get(years);
+        double result = futureValueMemo(presentValue, growthRate, years - 1) * (1 + growthRate);
+        memo.put(years, result);
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter present value (e.g., 1000): ");
+        double presentValue = scanner.nextDouble();
+
+        System.out.print("Enter annual growth rate (e.g., 0.1 for 10%): ");
+        double growthRate = scanner.nextDouble();
+
+        System.out.print("Enter number of years: ");
+        int years = scanner.nextInt();
+
+        double resultRecursive = futureValue(presentValue, growthRate, years);
+        System.out.println("Future Value (Recursive): " + resultRecursive);
+
+        double resultMemoized = futureValueMemo(presentValue, growthRate, years);
+        System.out.println("Future Value (Memoized): " + resultMemoized);
+
+        scanner.close();
+    }
+}
